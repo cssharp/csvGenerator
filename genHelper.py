@@ -1,7 +1,7 @@
 #coding:utf-8
 import paramsDict
 import json
-import csv
+import unicodecsv
 import io
 import sys
 reload(sys)
@@ -39,7 +39,7 @@ class GenHelper:
         value = [unicode(self.csvValue[t]) for t in self.baseColumn]
 
         with io.open(self.directPath, 'wb') as csvfile:
-            spamwriter=csv.writer(csvfile,
+            spamwriter=unicodecsv.writer(csvfile,
  dialect='excel')
             spamwriter.writerow(['version 1.00'])
             spamwriter.writerow(self.baseColumn)
@@ -48,5 +48,5 @@ class GenHelper:
 
 
 if __name__ == '__main__':
-    g = GenHelper('./tmp/new-balance_460BK3.txt', 'cc.csv')
+    g = GenHelper('./tmp/new-balance_460BK3.txt', 'happy.csv')
     g.genCsv()
