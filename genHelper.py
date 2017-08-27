@@ -3,6 +3,7 @@ import paramsDict
 import json
 import unicodecsv
 import io
+import hashlib
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -36,6 +37,21 @@ class GenHelper:
         self.csvValue['num_id'] = ''
         self.csvValue['features'] = ''
         self.csvValue['input_custom_cpv'] = ''
+
+
+        imgs = ['tmp/1.jpg', 'tmp/2.png']
+        md5s = []
+        for i in imgs:
+            md5 = self.md5str(i)
+            strx = open(i).read()
+            with open('happy/{0}.tbi'.format(md5), 'wb') as f:
+                f.write(strx)
+            md5s.append(md5) 
+
+
+        self.csvValue['picture_status'] = '2;2;'
+        self.csvValue['picture'] = ''.join(['{0}:1:0:|;'.format(i) for i in md5s])
+
         value = [unicode(self.csvValue[t]) for t in self.baseColumn]
 
         with io.open(self.directPath, 'wb') as csvfile:
@@ -45,6 +61,13 @@ class GenHelper:
             spamwriter.writerow(self.baseColumn)
             spamwriter.writerow(self.baseColumnZh)
             spamwriter.writerow(value)
+
+    def md5str(self, filename):
+        file_object = open(filename, 'rb')
+        file_content = file_object.read()
+        file_object.close()
+        file_md5 = hashlib.md5(file_content)
+        return file_md5.hexdigest()
 
 
 if __name__ == '__main__':
